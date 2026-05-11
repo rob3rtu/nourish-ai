@@ -183,10 +183,10 @@ function buildFallbackMealPlan(data: z.infer<typeof planInputSchema>, days: numb
 export const generateMealPlan = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => planInputSchema.parse(d))
   .handler(async ({ data }) => {
-    const model = getModel();
     const days = data.duration === "week" ? 7 : 1;
 
     try {
+      const model = getModel();
       const { text } = await generateText({
         model,
         prompt: `You are a chef-nutritionist. Build a ${days}-day meal plan that hits these daily targets:
