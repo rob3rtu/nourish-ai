@@ -53,8 +53,8 @@ export const analyzeProfile = createServerFn({ method: "POST" })
     const adjust = weight_goal === "lose" ? -500 : weight_goal === "gain" ? 400 : 0;
     const fallbackCalories = Math.max(1200, tdee + adjust);
 
-    const model = getModel();
     try {
+      const model = getModel();
       const { output } = await generateText({
         model,
         output: Output.object({
