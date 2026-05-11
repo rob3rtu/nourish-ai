@@ -17,7 +17,7 @@ const profileSchema = z.object({
 function getModel() {
   const key = process.env.LOVABLE_API_KEY;
   if (!key) throw new Error("LOVABLE_API_KEY not configured");
-  return createLovableAiGatewayProvider(key)("google/gemini-2.5-flash");
+  return createLovableAiGatewayProvider(key)("google/gemini-3-flash-preview");
 }
 
 // Agent 1: Profile & Goal Analyst
@@ -34,18 +34,19 @@ export const analyzeProfile = createServerFn({ method: "POST" })
     const fallbackCalories = Math.max(1200, tdee + adjust);
 
     const model = getModel();
-    const { output } = await generateText({
-      model,
-      output: Output.object({
-        schema: z.object({
-          daily_calories: z.number().int(),
-          protein_g: z.number().int(),
-          carbs_g: z.number().int(),
-          fats_g: z.number().int(),
-          rationale: z.string(),
+    try {
+      const { output } = await generateText({
+        model,
+        output: Output.object({
+          schema: z.object({
+            daily_calories: z.number(),
+            protein_g: z.number(),
+            carbs_g: z.number(),
+            fats_g: z.number(),
+            rationale: z.string(),
+          }),
         }),
-      }),
-      prompt: `You are a registered dietitian. Given:
+        prompt: `You are a registered dietitian. Given:
 - Age ${age}, Gender ${gender}, Weight ${weight_kg}kg, Height ${height_cm}cm
 - Activity: ${activity_level}, Goal: ${weight_goal}
 - BMR (Mifflin-St Jeor): ${bmr} kcal
@@ -56,10 +57,33 @@ export const analyzeProfile = createServerFn({ method: "POST" })
 Set daily macro targets (protein, carbs, fats in grams) appropriate to the goal.
 Use roughly: lose=higher protein (~1.8g/kg), gain=higher carbs (~50%), maintain=balanced.
 Macros should sum to ~daily_calories (4 kcal/g protein+carbs, 9 kcal/g fat).
-Give a short 1-2 sentence rationale.`,
-    });
-
-    return { bmr, tdee, ...output };
+Give a short 1-2 sentence rationale. Return integers for all numeric fields.`,
+      });
+      return {
+        bmr,
+        tdee,
+        daily_calories: Math.round(output.daily_calories),
+        protein_g: Math.round(output.protein_g),
+        carbs_g: Math.round(output.carbs_g),
+        fats_g: Math.round(output.fats_g),
+        rationale: output.rationale,
+      };
+    } catch (err) {
+      console.error("analyzeProfile AI error, using deterministic fallback:", err);
+      const proteinPerKg = weight_goal === "lose" ? 1.8 : weight_goal === "gain" ? 1.6 : 1.4;
+      const protein_g = Math.round(weight_kg * proteinPerKg);
+      const fats_g = Math.round((fallbackCalories * 0.25) / 9);
+      const carbs_g = Math.max(50, Math.round((fallbackCalories - protein_g * 4 - fats_g * 9) / 4));
+      return {
+        bmr,
+        tdee,
+        daily_calories: fallbackCalories,
+        protein_g,
+        carbs_g,
+        fats_g,
+        rationale: `Targets computed from your BMR (${bmr}) and TDEE (${tdee}) with a ${weight_goal} adjustment.`,
+      };
+    }
   });
 
 // Agent 2: Meal Planner & Chef
