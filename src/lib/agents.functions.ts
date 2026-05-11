@@ -17,7 +17,7 @@ const profileSchema = z.object({
 function getModel() {
   const key = process.env.LOVABLE_API_KEY;
   if (!key) throw new Error("LOVABLE_API_KEY not configured");
-  return createLovableAiGatewayProvider(key)("google/gemini-2.5-flash");
+  return createLovableAiGatewayProvider(key)("google/gemini-3-flash-preview");
 }
 
 // Agent 1: Profile & Goal Analyst
