@@ -1,7 +1,10 @@
 import { createFileRoute, Outlet, Link, useNavigate, useLocation } from "@tanstack/react-router";
 import { useEffect } from "react";
-import { Salad, LayoutDashboard, BookMarked, Plus, LogOut, Loader2 } from "lucide-react";
+import { Salad, LayoutDashboard, BookMarked, Plus, LogOut, Loader2, Sparkles } from "lucide-react";
 import { useAuth } from "@/lib/auth";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { planName } from "@/lib/plans";
 
 export const Route = createFileRoute("/_authenticated")({
   component: AuthLayout,
