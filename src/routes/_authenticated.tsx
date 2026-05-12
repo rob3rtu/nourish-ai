@@ -1,7 +1,10 @@
 import { createFileRoute, Outlet, Link, useNavigate, useLocation } from "@tanstack/react-router";
 import { useEffect } from "react";
-import { Salad, LayoutDashboard, BookMarked, Plus, LogOut, Loader2 } from "lucide-react";
+import { Salad, LayoutDashboard, BookMarked, Plus, LogOut, Loader2, Sparkles } from "lucide-react";
 import { useAuth } from "@/lib/auth";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { planName } from "@/lib/plans";
 
 export const Route = createFileRoute("/_authenticated")({
   component: AuthLayout,
@@ -26,10 +29,20 @@ function AuthLayout() {
     );
   }
 
+  const { data: tierProfile } = useQuery({
+    queryKey: ["profile-tier", user?.id],
+    queryFn: async () => {
+      const { data } = await supabase.from("profiles").select("subscription_tier").eq("id", user!.id).single();
+      return data;
+    },
+    enabled: !!user,
+  });
+
   const nav = [
     { to: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
     { to: "/generate", icon: Plus, label: "New plan" },
     { to: "/plans", icon: BookMarked, label: "Library" },
+    { to: "/billing", icon: Sparkles, label: "Pricing" },
   ] as const;
 
   return (
@@ -61,13 +74,23 @@ function AuthLayout() {
             })}
           </nav>
 
-          <button
-            onClick={async () => { await signOut(); navigate({ to: "/" }); }}
-            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground"
-          >
-            <LogOut className="h-4 w-4" />
-            <span className="hidden sm:inline">Sign out</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <Link
+              to="/billing"
+              className="hidden items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-foreground hover:border-primary sm:inline-flex"
+              title="Manage subscription"
+            >
+              <Sparkles className="h-3.5 w-3.5 text-primary" />
+              {planName(tierProfile?.subscription_tier)}
+            </Link>
+            <button
+              onClick={async () => { await signOut(); navigate({ to: "/" }); }}
+              className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground"
+            >
+              <LogOut className="h-4 w-4" />
+              <span className="hidden sm:inline">Sign out</span>
+            </button>
+          </div>
         </div>
       </header>
 

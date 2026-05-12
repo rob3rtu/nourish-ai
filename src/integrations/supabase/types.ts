@@ -71,6 +71,7 @@ export type Database = {
           id: string
           onboarded: boolean
           protein_g: number | null
+          subscription_tier: string
           target_weight_kg: number | null
           tdee: number | null
           updated_at: string
@@ -94,6 +95,7 @@ export type Database = {
           id: string
           onboarded?: boolean
           protein_g?: number | null
+          subscription_tier?: string
           target_weight_kg?: number | null
           tdee?: number | null
           updated_at?: string
@@ -117,6 +119,7 @@ export type Database = {
           id?: string
           onboarded?: boolean
           protein_g?: number | null
+          subscription_tier?: string
           target_weight_kg?: number | null
           tdee?: number | null
           updated_at?: string

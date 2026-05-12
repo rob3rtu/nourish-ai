@@ -31,6 +31,7 @@ function Landing() {
         <nav className="flex items-center gap-3 text-sm">
           <a href="#features" className="hidden text-muted-foreground hover:text-foreground sm:inline">Features</a>
           <a href="#how" className="hidden text-muted-foreground hover:text-foreground sm:inline">How it works</a>
+          <Link to="/billing" className="hidden text-muted-foreground hover:text-foreground sm:inline">Pricing</Link>
           <a href="#faq" className="hidden text-muted-foreground hover:text-foreground sm:inline">FAQ</a>
           {user ? (
             <Link to="/dashboard" className="rounded-lg bg-primary px-4 py-2 text-primary-foreground">
