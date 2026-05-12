@@ -29,10 +29,20 @@ function AuthLayout() {
     );
   }
 
+  const { data: tierProfile } = useQuery({
+    queryKey: ["profile-tier", user?.id],
+    queryFn: async () => {
+      const { data } = await supabase.from("profiles").select("subscription_tier").eq("id", user!.id).single();
+      return data;
+    },
+    enabled: !!user,
+  });
+
   const nav = [
     { to: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
     { to: "/generate", icon: Plus, label: "New plan" },
     { to: "/plans", icon: BookMarked, label: "Library" },
+    { to: "/billing", icon: Sparkles, label: "Pricing" },
   ] as const;
 
   return (
