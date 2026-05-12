@@ -74,13 +74,23 @@ function AuthLayout() {
             })}
           </nav>
 
-          <button
-            onClick={async () => { await signOut(); navigate({ to: "/" }); }}
-            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground"
-          >
-            <LogOut className="h-4 w-4" />
-            <span className="hidden sm:inline">Sign out</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <Link
+              to="/billing"
+              className="hidden items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-foreground hover:border-primary sm:inline-flex"
+              title="Manage subscription"
+            >
+              <Sparkles className="h-3.5 w-3.5 text-primary" />
+              {planName(tierProfile?.subscription_tier)}
+            </Link>
+            <button
+              onClick={async () => { await signOut(); navigate({ to: "/" }); }}
+              className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground"
+            >
+              <LogOut className="h-4 w-4" />
+              <span className="hidden sm:inline">Sign out</span>
+            </button>
+          </div>
         </div>
       </header>
 
