@@ -36,11 +36,11 @@ function AuthLayout() {
     <div className="min-h-screen">
       <header className="sticky top-0 z-30 border-b border-border bg-background/80 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-          <Link to="/dashboard" className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2">
             <span className="grid h-8 w-8 place-items-center rounded-lg bg-primary text-primary-foreground">
               <Salad className="h-4 w-4" />
             </span>
-            <span className="font-display text-lg">Nourish</span>
+            <span className="font-display text-lg">Macro Chef</span>
           </Link>
 
           <nav className="hidden items-center gap-1 md:flex">

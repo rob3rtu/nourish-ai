@@ -48,8 +48,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Nourish — AI meal plans tuned to your goals" },
-      { name: "description", content: "AI nutrition coach: calculates your calorie & macro targets and builds personalized meal plans." },
+      { title: "Macro Chef — AI meal plans tuned to your goals" },
+      { name: "description", content: "Macro Chef is your AI nutrition coach: it calculates your calorie & macro targets and builds personalized meal plans you'll love." },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
