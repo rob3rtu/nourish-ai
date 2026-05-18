@@ -38,7 +38,7 @@ function LoginPage() {
     if (error) {
       toast.error(error);
     } else {
-      toast.success(mode === "signup" ? "Welcome to Nourish!" : "Welcome back");
+      toast.success(mode === "signup" ? "Welcome to Macro Chef!" : "Welcome back");
       navigate({ to: "/dashboard" });
     }
   };
@@ -48,7 +48,7 @@ function LoginPage() {
       <div className="hidden flex-col justify-between p-10 md:flex bg-gradient-to-br from-primary to-[oklch(0.35_0.1_152)] text-primary-foreground">
         <Link to="/" className="flex items-center gap-2">
           <Salad className="h-6 w-6" />
-          <span className="font-display text-xl">Nourish</span>
+          <span className="font-display text-xl">Macro Chef</span>
         </Link>
         <div>
           <p className="font-display text-3xl leading-snug">
@@ -64,7 +64,7 @@ function LoginPage() {
         <div className="w-full max-w-sm">
           <Link to="/" className="md:hidden mb-6 flex items-center gap-2">
             <Salad className="h-5 w-5 text-primary" />
-            <span className="font-display text-lg">Nourish</span>
+            <span className="font-display text-lg">Macro Chef</span>
           </Link>
           <h1 className="font-display text-3xl">
             {mode === "signup" ? "Create your account" : "Welcome back"}
